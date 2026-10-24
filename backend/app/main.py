@@ -37,13 +37,9 @@ def get_dataset() -> data.Dataset:
 
 
 @lru_cache(maxsize=32)
-def cached_accuracy(cutoff: time, source_id: int) -> dict:
-    """The month report is the heaviest call, so memoise it per (cutoff, dataset)."""
+def cached_accuracy(cutoff: time) -> dict:
+    """The month report is the heaviest call, so memoise it per cutoff (cleared on refresh)."""
     return analysis.accuracy_report(get_dataset(), cutoff)
-
-
-def _accuracy(cutoff: time) -> dict:
-    return cached_accuracy(cutoff, id(get_dataset()))
 
 
 # ----------------------------------------------------------------------------- validation
@@ -88,7 +84,7 @@ def health():
 @app.get("/api/days", response_model=list[schemas.DaySummary])
 def days(cutoff: str = CutoffParam):
     """Every January delivery day with the decision-time vintage and its error metrics."""
-    return _accuracy(parse_cutoff(cutoff))["days"]
+    return cached_accuracy(parse_cutoff(cutoff))["days"]
 
 
 @app.get("/api/forecast", response_model=schemas.ForecastView)
@@ -112,7 +108,7 @@ def vintage_list(date: str = DateParam, cutoff: str = CutoffParam):
 @app.get("/api/accuracy", response_model=schemas.AccuracyReport, response_model_by_alias=True)
 def accuracy(cutoff: str = CutoffParam):
     """Month-level accuracy of the decision-time forecast, with breakdowns and margins."""
-    return _accuracy(parse_cutoff(cutoff))
+    return cached_accuracy(parse_cutoff(cutoff))
 
 
 @app.post("/api/refresh", response_model=schemas.Health)

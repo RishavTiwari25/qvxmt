@@ -47,7 +47,6 @@ export function useRemote<T>(load: () => Promise<T>, deps: unknown[]): Remote<T>
     return () => {
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 
   return state
