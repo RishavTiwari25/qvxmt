@@ -12,3 +12,5 @@ frontend/dist/
 .vercel/
 .env
 *.log
+
+.vercel

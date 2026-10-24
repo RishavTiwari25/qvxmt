@@ -121,3 +121,24 @@ def refresh():
         raise HTTPException(status_code=502, detail=f"Elexon fetch failed: {exc}")
     cached_accuracy.cache_clear()
     return health()
+
+
+# ---------------------------------------------------------------------------
+# Single-process deployment (Vercel): serve the built React bundle from the
+# same app so one Python function answers both /api/* and the SPA routes.
+# Locally, nginx (docker compose) or the Vite dev server does this instead.
+# ---------------------------------------------------------------------------
+_FRONTEND_DIST = config.REPO_ROOT / "frontend" / "dist"
+
+if _FRONTEND_DIST.is_dir():
+    from fastapi.responses import FileResponse
+    from fastapi.staticfiles import StaticFiles
+
+    app.mount("/assets", StaticFiles(directory=_FRONTEND_DIST / "assets"), name="assets")
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def spa(path: str) -> FileResponse:
+        candidate = _FRONTEND_DIST / path
+        if path and candidate.is_file():
+            return FileResponse(candidate)
+        return FileResponse(_FRONTEND_DIST / "index.html")

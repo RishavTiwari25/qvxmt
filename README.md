@@ -9,7 +9,7 @@ desk can size a safety margin instead of guessing.
 Data: Elexon Insights (BMRS) open API, national wind only. Scope: delivery days
 1 to 31 January 2026.
 
-**Live demo:** `<deployed URL>` (Vercel)
+**Live demo:** https://qvxmt.vercel.app (Vercel; API docs at https://qvxmt.vercel.app/api/docs)
 
 ## What it does
 
@@ -39,7 +39,7 @@ The cutoff is configurable in the header and in every API call (`?cutoff=HH:MM`)
 
 ```
 .
-├── api/index.py              Vercel entry: imports the FastAPI app as one serverless function
+├── api/index.py              Vercel entry: imports the FastAPI app as one Python function
 ├── backend/
 │   ├── app/
 │   │   ├── main.py           FastAPI routes, validation, in-memory dataset + memoised report
@@ -69,7 +69,7 @@ The cutoff is configurable in the header and in every API call (`?cutoff=HH:MM`)
 ├── scripts/fetch_data.py     Re-downloads and re-compresses the snapshot
 ├── docs/VIDEO_SCRIPT.md      Demo script
 ├── docker-compose.yml        backend (:8000) + nginx frontend (:8080)
-├── vercel.json               Static frontend + Python function under /api
+├── vercel.json               Vercel install/build commands (pip + npm ci, vite build)
 ├── render.yaml               Fallback blueprint for Render
 └── requirements.txt          Root deps for the Vercel Python runtime
 ```
@@ -205,14 +205,16 @@ gets fresher independent of the cutoff.
 
 ## Deployment
 
-**Vercel** (`vercel.json`): the frontend is built from `frontend/` and served statically;
-`api/index.py` is deployed as a Python 3.12 serverless function and `/api/*` is rewritten
-to it. From the repo root:
+**Vercel** (`vercel.json`): Vercel detects the FastAPI app and deploys it as one Python 3.12
+function; the install step runs `pip install -r requirements.txt` and `npm ci`, the build
+step runs `vite build`, and `backend/app/main.py` serves the built bundle from
+`frontend/dist` (static assets under `/assets`, SPA fallback to `index.html`) next to the
+`/api/*` routes. Live: https://qvxmt.vercel.app. From the repo root:
 
 ```bash
 npm i -g vercel
 vercel          # preview
-vercel --prod   # production; paste the URL into "Live demo" above
+vercel --prod   # production
 ```
 
 **Render** fallback (`render.yaml`): a Docker web service for the API and a static site
