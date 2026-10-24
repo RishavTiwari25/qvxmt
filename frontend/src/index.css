@@ -1,0 +1,380 @@
+:root {
+  color-scheme: light;
+  --surface: #f6f6f4;
+  --card: #fcfcfb;
+  --border: #e3e2de;
+  --text: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #8a8984;
+  --accent: #2a78d6; /* forecast */
+  --actual: #eb6834; /* actual */
+  --context: #9a9893; /* earlier vintages */
+  --over: #e34948; /* over-forecast / shortfall */
+  --under: #2a78d6; /* under-forecast / surplus */
+  --grid: #ecebe7;
+  --radius: 10px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--surface);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- layout */
+.app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  padding: 18px 0 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.brand small {
+  display: block;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.tabs button {
+  border: 0;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font: inherit;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.tabs button[aria-selected='true'] {
+  background: var(--text);
+  color: #fff;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.field input,
+.field select {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  min-width: 150px;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid-main {
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .grid-main,
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------------------------------- cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+
+.card h2,
+.card h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.card .sub {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.chart {
+  width: 100%;
+  height: 320px;
+}
+
+.chart-sm {
+  width: 100%;
+  height: 240px;
+}
+
+/* ---------------------------------------------------------------- KPI tiles */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.kpi .label {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.kpi .value {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 2px;
+}
+
+.kpi .note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ---------------------------------------------------------------- side panel */
+.stat-list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.stat-list dt {
+  color: var(--text-secondary);
+  font-size: 13.5px;
+}
+
+.stat-list dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+
+/* ---------------------------------------------------------------- tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  text-align: right;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--grid);
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+th {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+tr.highlight td {
+  background: #eef4fc;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 11.5px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #eef4fc;
+  color: var(--accent);
+}
+
+.pill.muted {
+  background: #f0efec;
+  color: var(--text-secondary);
+}
+
+/* ---------------------------------------------------------------- vintage picker */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chips label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--card);
+}
+
+.chips label.on {
+  border-color: var(--context);
+  background: #f0efec;
+}
+
+/* ---------------------------------------------------------------- states */
+.state {
+  padding: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.state.error {
+  color: var(--over);
+}
+
+.loading-bar {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 200% 100%;
+  animation: slide 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes slide {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.prose {
+  max-width: 760px;
+}
+
+.prose p,
+.prose li {
+  color: var(--text-secondary);
+}
+
+.prose strong {
+  color: var(--text);
+}
+
+.prose code {
+  font-size: 13px;
+  background: #f0efec;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.legend i {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.tooltip {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.tooltip b {
+  display: block;
+  margin-bottom: 4px;
+}
