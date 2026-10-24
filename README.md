@@ -11,8 +11,6 @@ Data: Elexon Insights (BMRS) open API, national wind only. Scope: delivery days
 
 **Live demo:** `<deployed URL>` (Vercel)
 
-![Decision view](docs/screenshot-decision.png)
-
 ## What it does
 
 | View | What the desk sees |
